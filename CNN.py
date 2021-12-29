@@ -14,11 +14,11 @@ import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 torch.backends.cudnn.benchmark = True
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(device)
+print("You are using",device)
 torch.cuda.empty_cache()
 
 #初始化变量
-n_epochs = 100 #训练次数
+n_epochs = 5 #训练次数
 batch_size_train = 240 #训练的 batch_size
 batch_size_test = 1000 #测试的 batch_size
 learning_rate = 0.001 # 学习率
@@ -104,7 +104,7 @@ class CNNModel(nn.Module):
         self.fc2 = nn.Linear(256,10)
                 
     def forward(self, x):
-        # conv layer 1 的前向计算，3行代码
+        # conv layer 1 的前向计算
         out = self.conv1(x)
         out = self.relu1(out)
         out = self.batch1(out)
@@ -116,7 +116,7 @@ class CNNModel(nn.Module):
         out = self.maxpool1(out)
         out = self.conv1_drop(out)
 
-        # conv layer 2 的前向计算，4行代码
+        # conv layer 2 的前向计算
         out = self.conv3(out)
         out = self.relu3(out)
         out = self.batch3(out)
@@ -131,7 +131,7 @@ class CNNModel(nn.Module):
         #Flatten拉平操作
         out = out.view(out.size(0),-1)
 
-        #FC layer的前向计算（2行代码）
+        #FC layer的前向计算
         out = self.fc1(out)
         out = self.fc1_relu(out)
         out = self.dp1(out)
@@ -142,7 +142,7 @@ class CNNModel(nn.Module):
 
 #权值初始化
 def weight_init(m):
-    # 1. 根据网络层的不同定义不同的初始化方式  
+    # 根据网络层的不同定义不同的初始化方式,使用吴恩达推荐的relu初始化方式 
     if isinstance(m, nn.Conv2d):
         nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
     # 也可以判断是否为conv2d，使用相应的初始化方式 
@@ -252,16 +252,16 @@ def test(epoch):
         # 每个batch训练完后保存优化器
         torch.save(optimizer.state_dict(), './optimizer02.pth')
     
-    # 打印相关信息 如：Test set: Avg. loss: 2.3129, Accuracy: 1205/10000 (12%)
+    # 打印数据训练相关信息
     print('\r Test set \033[1;31m{}\033[0m : Avg. loss: {:.4f}, Accuracy: {}/{}  \033[1;31m({:.2f}%)\033[0m\n'\
           .format(epoch,test_loss, correct,len(test_loader.dataset),100. * acc),end = '') 
 
 
-# 先看一下模型的识别能力，可以看到没有经过训练的模型在测试集上的表现是很差的，大概只有10%左右的正确识别率
+# 先看一下模型的识别能力，可以看到没有经过训练的模型在测试集上的表现是很差的，大概只有x%左右的正确识别率
 test(1)
 
 ### 训练！！！ 并在每个epoch之后测试 ###
-###################################################
+
 # 根据epoch数正式训练并在每个epoch训练结束后测试
 for epoch in range(1, n_epochs + 1):
     scheduler.step(test_acces[-1])
