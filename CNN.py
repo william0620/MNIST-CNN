@@ -18,7 +18,7 @@ print("You are using",device)
 torch.cuda.empty_cache()
 
 #初始化变量
-n_epochs = 5 #训练次数
+n_epochs = 50 #训练次数
 batch_size_train = 240 #训练的 batch_size
 batch_size_test = 1000 #测试的 batch_size
 learning_rate = 0.001 # 学习率
