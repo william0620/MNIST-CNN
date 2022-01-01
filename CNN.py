@@ -22,7 +22,7 @@ n_epochs = 100 #训练次数
 batch_size_train = 240 #训练的 batch_size
 batch_size_test = 1000 #测试的 batch_size
 learning_rate = 0.001 # 学习率
-momentum = 0.5 # 在梯度下降过程中解决mini-batch SGD优化算法更新幅度摆动大的问题，使得收敛速度更快
+momentum = 0.5 # 在梯度下降过程中解决mini-batch的优化问题
 log_interval = 10 # 操作间隔
 random_seed = 2 # 随机种子，设置后可以得到稳定的随机数
 torch.manual_seed(random_seed)
@@ -52,7 +52,7 @@ examples = enumerate(test_loader)
 # 获取一个 batch
 batch_idx, (example_data, example_targets) = next(examples)
 # 查看 batch 数据，有10000张图像的标签，tensor 大小为 [1000, 1, 28, 28]
-# 即图像为 28 * 28， 1个颜色通道（灰度图）， 1000张图像
+# 即图像为 28 * 28， 1个颜色通道（灰度图），1000张图像
 #print(example_targets)
 #print(example_data.shape)
 
@@ -142,11 +142,11 @@ class CNNModel(nn.Module):
 
 #权值初始化
 def weight_init(m):
-    # 根据网络层的不同定义不同的初始化方式,使用吴恩达推荐的relu初始化方式 
+    # 根据网络层的不同定义不同的初始化方式,使用relu
     if isinstance(m, nn.Conv2d):
         nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
     # 也可以判断是否为conv2d，使用相应的初始化方式 
-    '''
+    
     elif isinstance(m, nn.Linear):
         nn.init.xavier_normal_(m.weight)
         nn.init.constant_(m.bias, 0)
@@ -154,7 +154,7 @@ def weight_init(m):
     elif isinstance(m, nn.BatchNorm2d):
         nn.init.constant_(m.weight, 1)
         nn.init.constant_(m.bias, 0)
-    ''' 
+     
 
 # 实例化一个网络
 network = CNNModel()
@@ -257,7 +257,7 @@ def test(epoch):
           .format(epoch,test_loss, correct,len(test_loader.dataset),100. * acc),end = '') 
 
 
-# 先看一下模型的识别能力，可以看到没有经过训练的模型在测试集上的表现是很差的，大概只有x%左右的正确识别率
+# 先看试看一下模型的训练能力
 test(1)
 
 ### 训练！！！ 并在每个epoch之后测试 ###
